@@ -9,6 +9,8 @@ public class MouseInteraction : MonoBehaviour {
 	protected Vector3 previousMousePosition;
 	protected float startDistance;
 
+    protected GameObject oldParent;
+
     //public Camera camera;
 
 
@@ -75,6 +77,8 @@ public class MouseInteraction : MonoBehaviour {
 
         pivot.transform.position = hit.point;
 
+        oldParent = selected.transform.parent.gameObject;
+
         selected.transform.SetParent(pivot.transform);
 
     }
@@ -93,7 +97,7 @@ public class MouseInteraction : MonoBehaviour {
             selected.GetComponent<Rigidbody>().isKinematic = false;
             pivot.SetActive(false);
 
-            selected.transform.SetParent(null);
+            selected.transform.SetParent(oldParent.transform);
         }
 
 		// Clear selected variable

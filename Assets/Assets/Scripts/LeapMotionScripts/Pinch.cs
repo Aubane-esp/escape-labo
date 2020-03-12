@@ -10,8 +10,9 @@ public class Pinch : MonoBehaviour {
 	protected HashSet<GameObject> contacts;
 	protected Dictionary<GameObject, Transform> grabbed;
 	protected bool isGrabbing;
+    protected GameObject oldParent;
 
-	protected void Awake() {
+    protected void Awake() {
 		contacts = new HashSet<GameObject>();
 		grabbed = new Dictionary<GameObject, Transform>();
 
@@ -27,6 +28,7 @@ public class Pinch : MonoBehaviour {
 		else if(isGrabbing && ! hand.Pinch) {
 			Release();
 		}
+        Debug.Log(hand.Pinch);
 	}
 
 	protected void OnTriggerEnter(Collider other) {
@@ -42,11 +44,22 @@ public class Pinch : MonoBehaviour {
 	}
 
 	protected void Grab() {
-		foreach(GameObject contact in contacts) {
-			if(contact != null) {
-				//TODO
-			}
-			else {
+		foreach(GameObject contact in contacts)
+        {
+			if(contact != null)
+            {
+                if (contact.GetComponent<Collider>().transform.parent.name == "Flasks")
+                {
+                    //TODO - à vérifier 
+                    grabbed.Add(contact, contact.transform);
+                    oldParent = contact.GetComponent<Collider>().transform.parent.gameObject;
+                    contact.GetComponent<Collider>().transform.parent = gameObject.transform;
+                    Rigidbody R = contact.GetComponent<Collider>().attachedRigidbody;
+                    R.isKinematic = true;
+                }
+            }
+			else
+            {
 				grabbed.Remove(contact);
 			}
 		}
@@ -55,10 +68,14 @@ public class Pinch : MonoBehaviour {
 	}
 
 	protected void Release() {
-		foreach(var pair in grabbed) {
-			if(pair.Key != null) {
-				//TODO
-			}
+		foreach(var pair in grabbed)
+        {
+			if(pair.Key != null)
+            {
+                //TODO
+                pair.Key.transform.parent = oldParent.transform;
+                pair.Key.GetComponent<Rigidbody>().isKinematic = false;
+            }
 		}
 
 		grabbed.Clear();

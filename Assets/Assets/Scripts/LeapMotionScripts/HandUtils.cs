@@ -64,11 +64,24 @@ public class HandUtils : MonoBehaviour {
 
 		RaycastHit hit;
         float dist = (transform.position - pinchWith.transform.position).magnitude;
-        Debug.Log(dist);
-		if(Physics.Raycast(new Ray(transform.position, transform.forward), out hit, maxSelectionDistance, (1 << (int) Layer.OBJECT))) {
-			SetHighLight(pointed, false);
+        // Debug.Log(dist);
+        // A vérifier 
+        if(dist <= 0.07)
+        {
+            pinch = true; 
+        }
+        else
+        {
+            pinch = false;
+        }
+       
 
-			pointed = hit.collider.gameObject;
+		if(Physics.Raycast(new Ray(transform.position, transform.forward), out hit, maxSelectionDistance, (1 << (int) Layer.OBJECT))) {
+
+            pointed = hit.collider.gameObject;
+            
+            SetHighLight(pointed, false);
+            		
 
 			if(showRay) {
 				SetHighLight(pointed, true);
