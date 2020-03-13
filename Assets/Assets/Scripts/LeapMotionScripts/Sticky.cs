@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Sticky : MonoBehaviour
 {
-    public bool release = false; // Un booléen pour relacher l'objet
+    protected bool release = false; // Un booléen pour relacher l'objet
     protected Transform oldParent; // L'ancien parent
     protected Collider objectSticked; // Pour sauvegarder les objets attachés
     protected bool freeHand;
+    protected HandUtils hand;
     
     private void Start()
     {
         freeHand = true;
         oldParent = null;
         objectSticked = null;
+        hand = GetComponent<HandUtils>();
     }
 
     protected void OnTriggerEnter(Collider collision)
@@ -32,6 +34,7 @@ public class Sticky : MonoBehaviour
 
     private void Update()
     {
+        release = !hand.Pinch;
         if(release && objectSticked != null) // Si on ne veut plus que l'objet soit sticky
         {
             objectSticked.transform.SetParent(oldParent);
